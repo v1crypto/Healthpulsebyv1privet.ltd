@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>HealthPulse Pro · Veda AI ✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#000000;
+    --bg-2:#070709;
+    --bg-3:#0d0d12;
+    --surface:rgba(255,255,255,0.035);
+    --surface-2:rgba(255,255,255,0.06);
+    --border:rgba(255,255,255,0.08);
+    --border-2:rgba(255,255,255,0.18);
+    --text:#f5f5f7;
+    --sub:#a8a8b5;
+    --muted:#6a6a7a;
+    --lime:#c2ff3d;
+    --pink:#ff3df0;
+    --cyan:#3df0ff;
+    --violet:#9d6cff;
+    --orange:#ff7a3d;
+    --red:#ff3d6e;
+    --green:#3dff9d;
+    --grad-main:linear-gradient(135deg,#c2ff3d 0%,#3df0ff 50%,#9d6cff 100%);
+    --grad-pink:linear-gradient(135deg,#ff3df0,#9d6cff);
+    --grad-lime:linear-gradient(135deg,#c2ff3d,#3df0ff);
+    --grad-warm:linear-gradient(135deg,#ff7a3d,#ff3df0);
+    --shadow-glow:0 10px 40px -10px rgba(157,108,255,.5);
+  }
+  html,body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-family:'Outfit',system-ui,sans-serif}
+  body{position:relative}
+  #bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:radial-gradient(ellipse at top,#0a0612 0%,#000 60%)}
+  #bg::before,#bg::after{content:"";position:absolute;width:480px;height:480px;border-radius:50%;filter:blur(120px);opacity:.35;animation:blob 20s ease-in-out infinite}
+  #bg::before{background:radial-gradient(circle,#9d6cff,transparent 65%);top:-140px;left:-120px}
+  #bg::after{background:radial-gradient(circle,#ff3df0,transparent 65%);bottom:-180px;right:-140px;animation-delay:-8s}
+  #grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%)}
+
+  .scr{display:none;position:relative;z-index:1;flex-direction:column}
+  .scr.on{display:flex}
+  #pg-sector{min-height:100vh;align-items:center;padding:90px 18px 60px;overflow-y:auto}
+  #pg-subject{min-height:100vh;overflow-y:auto;padding:80px 18px 60px}
+  #pg-chat{height:100vh;overflow:hidden}
+  #pg-premium{min-height:100vh;align-items:center;padding:90px 18px 60px;overflow-y:auto}
+  #pg-mcq{height:100vh;overflow:hidden;display:none;flex-direction:column}
+  #pg-mcq.on{display:flex}
+  #pg-payment{height:100vh;overflow:hidden;display:none;flex-direction:column}
+  #pg-payment.on{display:flex}
+
+  .topbar{position:fixed;top:12px;left:12px;right:12px;z-index:200;background:rgba(10,8,16,.88);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border:1px solid rgba(157,108,255,.18);border-radius:22px;padding:8px 10px 8px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.03)}
+  .tb-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1;overflow:hidden}
+  .tb-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+  .tb-icon-btn{background:var(--surface);border:1px solid var(--border);color:var(--sub);border-radius:12px;width:34px;height:34px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+  .tb-icon-btn:hover{border-color:rgba(157,108,255,.5);color:var(--violet);background:rgba(157,108,255,.1)}
+  .tb-logo{width:34px;height:34px;border-radius:12px;background:var(--grad-main);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000;font-family:'Outfit';box-shadow:0 0 20px rgba(194,255,61,.4);cursor:pointer}
+  .tb-name{color:var(--text);font-size:13px;font-weight:700;letter-spacing:.04em;font-family:'Outfit';white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tb-name span{background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lang-wrap{display:flex;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;padding:3px;gap:2px}
+  .lb{background:none;border:none;color:var(--sub);font-size:12px;padding:5px 11px;border-radius:11px;cursor:pointer;font-family:'JetBrains Mono';font-weight:700;transition:all .2s}
+  .lb.on{background:var(--grad-main);color:#000;box-shadow:0 4px 12px rgba(194,255,61,.3)}
+  .premium-badge{background:var(--grad-warm);border:none;color:#fff;padding:7px 12px;border-radius:14px;font-size:11px;font-weight:800;font-family:'Outfit';cursor:pointer;letter-spacing:.04em;box-shadow:0 6px 18px rgba(255,61,240,.35);transition:transform .15s}
+  .premium-badge:active{transform:scale(.94)}
+  .hero-wrap{display:flex;flex-direction:column;align-items:center;width:100%;max-width:760px}
+  .logo-stage{position:relative;width:120px;height:120px;margin-top:14px;display:flex;align-items:center;justify-content:center}
+  .logo-anim{width:88px;height:88px;border-radius:28px;background:var(--grad-main);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#000;font-family:'Outfit';box-shadow:0 0 50px rgba(194,255,61,.5),0 0 90px rgba(157,108,255,.35);animation:afloat 5s ease-in-out infinite;cursor:pointer;z-index:2;transform:rotate(-6deg)}
+  .logo-ring{position:absolute;inset:0;border-radius:36px;border:1.5px dashed rgba(194,255,61,.4);animation:aspin 14s linear infinite}
+  .logo-ring2{position:absolute;inset:-14px;border-radius:42px;border:1px solid rgba(157,108,255,.25);animation:aspin 22s linear infinite reverse}
+  .hero-t{font-size:clamp(34px,8vw,54px);font-weight:800;text-align:center;margin:22px 0 8px;letter-spacing:-.03em;line-height:1.02;font-family:'Outfit'}
+  .hero-t .accent{background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic}
+  .vbadge{display:inline-flex;align-items:center;gap:6px;background:rgba(194,255,61,.08);border:1px solid rgba(194,255,61,.3);color:var(--lime);border-radius:99px;padding:6px 14px;font-size:11px;font-family:'JetBrains Mono';font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  .hero-s{color:var(--sub);font-size:15px;text-align:center;max-width:460px;line-height:1.55;margin:14px 0 24px;font-weight:400}
+  .hero-s b{color:var(--text);font-weight:600}
+  .feat-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:24px}
+  .feat-chip{background:var(--surface);border:1px solid var(--border);color:var(--sub);font-size:11px;padding:6px 12px;border-radius:99px;font-family:'JetBrains Mono';font-weight:600}
+  .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;width:100%;max-width:760px}
+  .scard{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:18px 16px 16px;cursor:pointer;text-align:left;overflow:hidden;transition:transform .25s cubic-bezier(.2,.9,.3,1.1),border-color .2s;backdrop-filter:blur(6px)}
+  .scard::before{content:"";position:absolute;inset:0;border-radius:24px;padding:1px;background:linear-gradient(135deg,transparent 40%,var(--c-acc,#fff) 100%);-webkit-mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .25s;pointer-events:none}
+  .scard:hover{transform:translateY(-4px) rotate(-.4deg)}
+  .scard:hover::before{opacity:.6}
+  .scard:active{transform:translateY(-1px) scale(.99)}
+  .sc-emoji{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:12px;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+  .sc-label{font-size:15px;font-weight:700;margin-bottom:3px;letter-spacing:-.01em}
+  .sc-desc{font-size:11px;color:var(--muted);font-family:'JetBrains Mono';margin-bottom:10px;line-height:1.4}
+  .sc-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--sub);font-family:'JetBrains Mono'}
+  .sc-arrow{width:24px;height:24px;border-radius:50%;background:var(--c-acc,#fff);color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+  .upgrade-note{margin-top:34px;max-width:760px;width:100%;background:linear-gradient(135deg,rgba(255,122,61,.08),rgba(255,61,240,.08));border:1px solid rgba(255,122,61,.22);border-radius:18px;padding:14px 18px;font-size:13px;color:var(--sub);text-align:center;line-height:1.55}
+  .upgrade-note b{color:var(--text)}
+  .sub-wrap{max-width:760px;width:100%;margin:0 auto}
+  .bb{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);color:var(--sub);border-radius:99px;padding:8px 16px;font-size:13px;font-family:'Outfit';font-weight:600;cursor:pointer;margin-bottom:16px;transition:all .2s}
+  .bb:hover{border-color:var(--border-2);color:var(--text)}
+  .sbadge{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:16px 18px;margin-bottom:18px;backdrop-filter:blur(8px)}
+  .sbadge-icon{width:54px;height:54px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  .sb-title{font-size:19px;font-weight:800;letter-spacing:-.01em}
+  .sb-sub{font-size:12px;color:var(--muted);font-family:'JetBrains Mono';margin-top:2px}
+  .pick-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .pick-dot{width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime)}
+  .pick-title{font-size:13px;color:var(--sub);font-family:'JetBrains Mono';font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+  .jgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+  .jchip{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;color:var(--text);font-size:14px;cursor:pointer;text-align:left;transition:all .2s;font-family:'Outfit';font-weight:500;display:flex;align-items:center;gap:10px}
+  .jchip:hover{border-color:var(--border-2);background:var(--surface-2);transform:translateY(-1px)}
+  .jchip:active{transform:translateY(0) scale(.99)}
+  .jchip-bullet{width:8px;height:8px;border-radius:50%;flex-shrink:0;box-shadow:0 0 10px currentColor}
+  #pg-chat{background:linear-gradient(180deg,#070410 0%,#040208 60%,#020105 100%)}
+  .chat-hdr{background:rgba(12,6,22,.94);backdrop-filter:blur(28px) saturate(180%);border-bottom:1px solid rgba(157,108,255,.2);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;margin-top:60px;box-shadow:0 1px 24px rgba(157,108,255,.1)}
+  .chat-logo{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:800;font-size:13px;font-family:'Outfit';flex-shrink:0;box-shadow:0 0 18px rgba(157,108,255,.4)}
+  .chat-info{flex:1;min-width:0}
+  .chat-brand{color:rgba(157,108,255,.7);font-size:9px;letter-spacing:.14em;font-family:'JetBrains Mono';text-transform:uppercase;font-weight:700}
+  .chat-title{font-size:14px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hbtn{background:rgba(157,108,255,.08);border:1px solid rgba(157,108,255,.2);color:var(--sub);border-radius:12px;padding:7px 11px;font-size:12px;font-family:'Outfit';font-weight:600;cursor:pointer;transition:all .15s}
+  .hbtn:hover{color:var(--text);border-color:rgba(157,108,255,.5);background:rgba(157,108,255,.15)}
+  .hbtn.mcq{background:var(--grad-lime);color:#000;border:none;font-weight:800;box-shadow:0 4px 16px rgba(194,255,61,.25)}
+  #ca{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:14px;max-width:800px;width:100%;margin:0 auto}
+  .wlc{text-align:center;padding:24px 8px}
+  .wlc-emoji{font-size:48px;margin-bottom:10px;display:inline-block;animation:afloat 4s ease-in-out infinite}
+  .wlc-title{font-size:22px;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
+  .wlc-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(194,255,61,.08);border:1px solid rgba(194,255,61,.3);color:var(--lime);font-size:11px;padding:5px 12px;border-radius:99px;font-family:'JetBrains Mono';font-weight:700;letter-spacing:.1em;margin-bottom:18px}
+  .wlc-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+  .wlc-act{background:var(--grad-lime);color:#000;border:none;padding:10px 18px;border-radius:99px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit'}
+  .wlc-act.alt{background:var(--grad-warm);color:#fff}
+  .wlc-act.pdf{background:var(--surface-2);color:var(--text);border:1px solid var(--border-2)}
+  .wlc-act.pay{background:var(--grad-warm);color:#000;border:1px solid var(--lime)}
+  .slist{display:flex;flex-direction:column;gap:8px;max-width:440px;margin:0 auto}
+  .sqb{background:var(--surface);border:1px solid;border-radius:14px;padding:12px 16px;font-size:14px;cursor:pointer;color:var(--text);text-align:left;font-family:'Outfit';font-weight:500;transition:all .2s;display:flex;align-items:center;gap:10px}
+  .sqb::before{content:"✨";font-size:13px}
+  .sqb:hover{background:var(--surface-2);transform:translateX(4px)}
+  .mrow{display:flex;gap:10px;align-items:flex-start;animation:slideIn .3s ease-out}
+  .mrow.u{justify-content:flex-end}
+  .avc{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;font-weight:800;font-family:'Outfit';flex-shrink:0;margin-top:2px;box-shadow:0 4px 16px rgba(157,108,255,.5)}
+  .ubub{color:#fff;border-radius:20px 6px 20px 20px;padding:11px 16px;font-size:15px;max-width:78%;line-height:1.55;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+  .abub{background:linear-gradient(145deg,rgba(22,10,42,.97),rgba(14,6,28,.95));border:1px solid rgba(157,108,255,.28);border-radius:8px 22px 22px 22px;padding:14px 18px;font-size:15px;max-width:84%;line-height:1.75;backdrop-filter:blur(12px);box-shadow:0 6px 32px rgba(157,108,255,.12),0 0 0 1px rgba(255,255,255,.03)}
+  .abub .h3{font-size:12px;font-family:'JetBrains Mono';margin:12px 0 4px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .abub .h3:first-child{margin-top:0}
+  .abub .li{padding-left:14px;margin-bottom:4px;color:rgba(200,190,220,.85);position:relative}
+  .abub .li::before{content:"→";position:absolute;left:0;color:var(--violet)}
+  .abub .pp{margin-bottom:4px;color:rgba(200,190,220,.85)}
+  .abub strong{color:#e8d8ff;font-weight:700}
+  .file-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(61,240,255,.1);border:1px solid rgba(61,240,255,.3);color:var(--cyan);font-size:11px;padding:4px 10px;border-radius:99px;font-family:'JetBrains Mono';font-weight:600;margin-bottom:6px}
+  .dots{display:flex;gap:6px;padding:6px 0;align-items:center}
+  .dot{width:8px;height:8px;border-radius:50%;animation:abnc 1.2s infinite}
+  .ibar{background:rgba(10,4,20,.96);backdrop-filter:blur(28px);border-top:1px solid rgba(157,108,255,.2);padding:12px 14px 16px;flex-shrink:0;box-shadow:0 -4px 32px rgba(157,108,255,.06)}
+  .iinner{max-width:800px;margin:0 auto}
+  .attach-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;min-height:0}
+  .attach-bar:empty{display:none}
+  .attach-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(61,240,255,.12);border:1px solid rgba(61,240,255,.3);color:var(--cyan);font-size:12px;padding:5px 10px;border-radius:99px;font-family:'JetBrains Mono';font-weight:600}
+  .attach-pill .x{cursor:pointer;color:var(--text);font-weight:700;font-size:14px;line-height:1}
+  .irow{display:flex;gap:6px;align-items:flex-end;background:rgba(22,10,42,.85);border:1px solid rgba(157,108,255,.22);border-radius:20px;padding:6px 6px 6px 10px;transition:border-color .2s,box-shadow .2s}
+  .irow:focus-within{border-color:rgba(157,108,255,.55);box-shadow:0 0 0 4px rgba(157,108,255,.1)}
+  .iconbtn{width:38px;height:38px;border:none;border-radius:12px;background:rgba(157,108,255,.1);color:var(--sub);font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .iconbtn:hover{background:rgba(157,108,255,.2);color:var(--text)}
+  .iconbtn.rec{background:var(--red);color:#fff;animation:pulse 1.2s infinite}
+  #ci{flex:1;background:transparent;border:none;color:var(--text);font-size:15px;font-family:'Outfit';padding:10px 4px;resize:none;outline:none;height:46px;font-weight:500;min-width:0}
+  #ci::placeholder{color:rgba(157,108,255,.4)}
+  #sb{width:42px;height:42px;border:none;border-radius:14px;color:#fff;font-size:18px;cursor:pointer;font-weight:800;transition:transform .15s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+  #sb:not(:disabled):active{transform:scale(.92)}
+  #sb:disabled{opacity:.3;cursor:not-allowed}
+  .usage-row{display:flex;justify-content:space-between;font-size:11px;font-family:'JetBrains Mono';font-weight:600;color:var(--muted);margin-top:10px}
+  .free-limit-bar{background:rgba(255,255,255,.06);border-radius:99px;height:5px;margin:6px 0;overflow:hidden}
+  .free-limit-fill{background:var(--grad-main);height:100%;border-radius:99px;transition:width .4s}
+  #upgradeMsg{font-size:11px;color:var(--orange);text-align:center;margin-top:6px;font-family:'Outfit'}
+  #upgradeMsg a{color:var(--lime);text-decoration:none;font-weight:600}
+  .watch-ad-btn{background:var(--grad-warm);border:none;color:#fff;padding:5px 11px;border-radius:99px;font-size:11px;cursor:pointer;font-weight:700;margin:0 4px}
+  .cooldown-timer{color:var(--cyan);font-weight:700;font-size:12px}
+  .logout-link{font-size:11px;color:var(--muted);text-align:center;margin-top:8px;cursor:pointer;font-family:'JetBrains Mono'}
+  .logout-link:hover{color:var(--text)}
+  .mcq-hdr{background:rgba(8,8,12,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;margin-top:60px}
+  .mcq-body{flex:1;overflow-y:auto;padding:20px 16px;max-width:760px;width:100%;margin:0 auto}
+  .mcq-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .mcq-prog-bar{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+  .mcq-prog-fill{height:100%;background:var(--grad-main);border-radius:99px;transition:width .4s}
+  .mcq-prog-txt{font-size:12px;font-family:'JetBrains Mono';color:var(--sub);font-weight:700}
+  .mcq-card{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:22px 20px;backdrop-filter:blur(8px)}
+  .mcq-qnum{font-size:11px;font-family:'JetBrains Mono';color:var(--lime);letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+  .mcq-q{font-size:18px;font-weight:700;line-height:1.45;letter-spacing:-.01em;margin-bottom:18px}
+  .mcq-opts{display:flex;flex-direction:column;gap:10px}
+  .mcq-opt{background:var(--bg-3);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;color:var(--text);text-align:left;cursor:pointer;font-family:'Outfit';font-size:14px;font-weight:500;transition:all .15s;display:flex;align-items:center;gap:12px;line-height:1.4}
+  .mcq-opt:hover:not(:disabled){border-color:var(--border-2);background:var(--surface-2)}
+  .mcq-opt:disabled{cursor:default}
+  .mcq-opt .letter{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;color:var(--sub);font-family:'JetBrains Mono'}
+  .mcq-opt.correct{border-color:var(--green);background:rgba(61,255,157,.08);color:var(--text)}
+  .mcq-opt.correct .letter{background:var(--green);color:#000}
+  .mcq-opt.wrong{border-color:var(--red);background:rgba(255,61,110,.08)}
+  .mcq-opt.wrong .letter{background:var(--red);color:#fff}
+  .mcq-expl{margin-top:16px;background:rgba(157,108,255,.06);border:1px solid rgba(157,108,255,.2);border-radius:14px;padding:12px 14px;font-size:13px;color:var(--sub);line-height:1.6;display:none}
+  .mcq-expl.show{display:block;animation:slideIn .25s ease-out}
+  .mcq-expl b{color:var(--text)}
+  .mcq-next{margin-top:14px;width:100%;background:var(--grad-main);color:#000;border:none;padding:13px;border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit';display:none}
+  .mcq-next.show{display:block}
+  .mcq-result{text-align:center;padding:30px 18px}
+  .mcq-score{font-size:64px;font-weight:900;background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:'Outfit';line-height:1}
+  .mcq-score small{font-size:24px;color:var(--muted);font-weight:600;-webkit-text-fill-color:var(--muted)}
+  .mcq-grade{font-size:18px;font-weight:700;margin:14px 0 6px}
+  .mcq-tag{color:var(--sub);font-size:13px;margin-bottom:24px}
+  .mcq-acts{display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto}
+  .mcq-acts button{padding:12px;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit';border:none}
+  .mcq-acts .primary{background:var(--grad-main);color:#000}
+  .mcq-acts .secondary{background:var(--surface-2);color:var(--text);border:1px solid var(--border-2)}
+  .ad-modal{position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+  .ad-modal.active{display:flex}
+  .ad-box{background:linear-gradient(180deg,#15101f,#000);border:1px solid var(--border-2);border-radius:28px;padding:32px 28px;max-width:400px;width:100%;text-align:center;box-shadow:var(--shadow-glow)}
+  .ad-emoji{font-size:56px;margin-bottom:14px}
+  .ad-title{font-size:20px;font-weight:800;margin-bottom:8px;letter-spacing:-.01em}
+  .ad-countdown{font-size:64px;font-weight:900;background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent;margin:18px 0;font-family:'Outfit'}
+  .ad-btn{background:var(--grad-main);border:none;color:#000;padding:13px 26px;border-radius:99px;font-size:15px;font-weight:800;cursor:pointer;width:100%;font-family:'Outfit';margin-top:6px}
+  .ad-btn:disabled{opacity:.4;cursor:not-allowed}
+  .ad-close{background:transparent;border:1px solid var(--border);color:var(--sub);padding:11px 26px;border-radius:99px;font-size:14px;font-weight:600;cursor:pointer;width:100%;margin-top:10px;font-family:'Outfit'}
+  .premium-head{text-align:center;margin-bottom:28px}
+  .premium-head .crown{font-size:54px;margin-bottom:10px;display:inline-block;animation:afloat 4s ease-in-out infinite}
+  .premium-head .title{font-size:32px;font-weight:800;letter-spacing:-.02em}
+  .premium-head .title span{background:var(--grad-warm);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .premium-head .sub{color:var(--sub);margin-top:6px;font-size:14px}
+  .plan-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:24px;margin-bottom:14px;backdrop-filter:blur(8px);position:relative;overflow:hidden}
+  .plan-card.popular{border:1.5px solid var(--lime);box-shadow:0 0 0 4px rgba(194,255,61,.06)}
+  .popular-tag{position:absolute;top:14px;right:14px;background:var(--grad-main);color:#000;font-size:10px;font-weight:800;padding:5px 10px;border-radius:99px;font-family:'JetBrains Mono';letter-spacing:.06em}
+  .plan-price{font-size:36px;font-weight:900;margin:6px 0 4px;letter-spacing:-.02em;font-family:'Outfit'}
+  .plan-price small{font-size:14px;color:var(--muted);font-weight:500}
+  .plan-desc{font-size:13px;color:var(--sub);margin-bottom:18px}
+  .pay-btn{background:var(--grad-main);border:none;color:#000;padding:14px 28px;border-radius:99px;font-size:15px;font-weight:800;cursor:pointer;width:100%;font-family:'Outfit';transition:transform .15s}
+  .pay-btn:active{transform:scale(.98)}
+  .pay-btn.phonepe{background:var(--grad-warm);color:#fff}
+  .plan-card.alt .pay-btn{background:var(--grad-warm);color:#fff}
+  .plan-card.uni .pay-btn{background:var(--surface-2);color:var(--text);border:1px solid var(--border-2)}
+  .admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(8px);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px}
+  .admin-box{background:linear-gradient(180deg,#15101f,#000);border:1px solid var(--border-2);border-radius:24px;padding:24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto}
+  .admin-box h3{font-size:20px;font-weight:800;margin-bottom:4px;background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .admin-box p{color:var(--sub);font-size:13px;margin-bottom:12px}
+  .admin-input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:11px 14px;border-radius:14px;font-size:14px;margin:10px 0;font-family:'Outfit'}
+  .admin-btn{background:var(--grad-main);color:#000;border:none;padding:9px 14px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;margin:4px 4px 4px 0;font-family:'Outfit';transition:transform .15s}
+  .admin-btn:active{transform:scale(.95)}
+  .admin-btn.danger{background:var(--red);color:#fff}
+  .admin-btn.download{background:var(--grad-lime);color:#000;width:100%;padding:12px;font-size:14px;margin:6px 0}
+  .admin-btn.glow{box-shadow:0 0 20px rgba(194,255,61,.3)}
+  .premium-list{list-style:none;margin:10px 0;max-height:180px;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:10px}
+  .premium-list li{font-size:13px;padding:6px 0;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--border)}
+  .premium-list li:last-child{border-bottom:none}
+  .payment-body{flex:1;overflow-y:auto;padding:20px 16px;max-width:760px;width:100%;margin:0 auto}
+  .payment-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:30px 24px;text-align:center}
+  .payment-card .upi-logo{font-size:64px;margin-bottom:16px}
+  .payment-card h2{font-size:24px;font-weight:800;margin-bottom:8px}
+  .payment-card .sub{color:var(--sub);font-size:14px;margin-bottom:20px}
+  .payment-option{background:var(--bg-3);border:1.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px}
+  .payment-option:hover{border-color:var(--lime)}
+  .payment-option.selected{border-color:var(--lime);background:rgba(194,255,61,.06)}
+  .payment-option .icon{font-size:28px}
+  .payment-option .info{flex:1;text-align:left}
+  .payment-option .info .name{font-weight:700;font-size:15px}
+  .payment-option .info .desc{font-size:12px;color:var(--muted)}
+  .payment-option .radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center}
+  .payment-option.selected .radio{border-color:var(--lime)}
+  .payment-option.selected .radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--lime)}
+  .payment-hdr{background:rgba(12,6,22,.94);backdrop-filter:blur(28px);border-bottom:1px solid rgba(157,108,255,.2);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;margin-top:60px}
+  .expiry-badge{background:rgba(194,255,61,.1);border:1px solid rgba(194,255,61,.3);color:var(--lime);padding:4px 12px;border-radius:99px;font-size:11px;font-family:'JetBrains Mono';font-weight:600}
+  @keyframes afloat{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-10px) rotate(-6deg)}}
+  .wlc-emoji{animation:afloat2 4s ease-in-out infinite}
+  @keyframes afloat2{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  @keyframes aspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  @keyframes abnc{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-7px);opacity:1}}
+  @keyframes blob{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.1)}66%{transform:translate(-30px,40px) scale(.95)}}
+  @keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,61,110,.6)}50%{box-shadow:0 0 0 8px rgba(255,61,110,0)}}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08)}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.18)}
+  @media (max-width:420px){
+    .hero-t{font-size:38px}
+    .sgrid{grid-template-columns:repeat(2,1fr);gap:10px}
+    .scard{padding:14px 12px}
+    .sc-emoji{width:40px;height:40px;font-size:20px;border-radius:12px}
+    .sc-label{font-size:13px}
+    .tb-name{font-size:11px}
+    .mcq-q{font-size:16px}
+    .mcq-opt{padding:12px 14px;font-size:13px}
+  }
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="grid"></div>
+
+<!-- AD MODAL -->
+<div id="adModal" class="ad-modal">
+  <div class="ad-box">
+    <div class="ad-emoji">📺</div>
+    <div class="ad-title">Watch ad → unlock <span style="color:var(--lime)">+5 questions</span></div>
+    <div class="ad-countdown" id="adCountdown">30</div>
+    <button class="ad-btn" id="watchAdBtn" onclick="watchAd()">▶ Watch Ad (30s)</button>
+    <button class="ad-close" onclick="closeAdModal()">Maybe later</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo" id="tbLogo">HP</div>
+    <span class="tb-name">HealthPulse <span>· Veda AI</span></span>
+  </div>
+  <div class="tb-right">
+    <button class="premium-badge" onclick="showPremium()" id="premiumBadge">👑 PRO</button>
+    <div class="lang-wrap">
+      <button class="lb on" id="lb-en" onclick="setLang('en')">EN</button>
+      <button class="lb" id="lb-hi" onclick="setLang('hi')">हिं</button>
+    </div>
+    <button class="tb-icon-btn" id="tbAdminBtn" onclick="showAdminPanel()" title="Admin Panel" style="display:none">⚙️</button>
+  </div>
+</div>
+
+<!-- SECTOR PAGE -->
+<div id="pg-sector" class="scr on">
+  <div class="hero-wrap">
+    <div class="logo-stage">
+      <div class="logo-ring2"></div>
+      <div class="logo-ring"></div>
+      <div class="logo-anim" id="logoAnim">HP</div>
+    </div>
+    <h1 class="hero-t">Learn medicine,<br><span class="accent">vibe</span> with AI ✨</h1>
+    <div class="vbadge">✦ Powered by Veda AI ✦</div>
+    <p class="hero-s" id="txt-hsub">Pick your <b>medical sector</b> — full syllabus, instant answers, zero cap.</p>
+    <div class="feat-row">
+      <div class="feat-chip">📄 PDF Upload</div>
+      <div class="feat-chip">🎤 Voice Input</div>
+      <div class="feat-chip">📝 10-MCQ Test</div>
+      <div class="feat-chip">🇮🇳 Hindi + English</div>
+      <div class="feat-chip">💳 UPI Payment</div>
+    </div>
+    <div class="sgrid" id="sgrid"></div>
+    <div class="upgrade-note">🔥 <b>Free:</b> 5 questions/day · Watch 30s ad → <b>+5</b> · 👑 <b>Pro:</b> ₹200/mo or ₹2,200/yr (1 month free) · 💳 <b>Pay via UPI</b> · ⏰ <b>Auto-expiry:</b> 30/365 days</div>
+  </div>
+</div>
+
+<!-- SUBJECT PAGE -->
+<div id="pg-subject" class="scr">
+  <div class="sub-wrap">
+    <button class="bb" onclick="show('pg-sector')" id="txt-back1">← Back</button>
+    <div class="sbadge" id="sbadge"></div>
+    <div class="pick-row"><div class="pick-dot"></div><div class="pick-title" id="txt-pick">Choose a subject</div></div>
+    <div class="jgrid" id="jgrid"></div>
+  </div>
+</div>
+
+<!-- PREMIUM PAGE -->
+<div id="pg-premium" class="scr">
+  <div class="sub-wrap">
+    <button class="bb" onclick="show('pg-sector')">← Back</button>
+    <div class="premium-head">
+      <div class="crown">👑</div>
+      <div class="title">Go <span>Premium</span></div>
+      <div class="sub" id="premiumStatus">Unlimited questions, no ads, full focus.</div>
+    </div>
+    <div class="plan-card popular">
+      <div class="popular-tag">MOST POPULAR</div>
+      <div style="font-size:13px;color:var(--sub);font-family:'JetBrains Mono';font-weight:600">Monthly</div>
+      <div class="plan-price">₹200 <small>/ month</small></div>
+      <div class="plan-desc">Unlimited questions · No ads · Expires in 30 days</div>
+      <button class="pay-btn phonepe" onclick="initiatePayment(200,'monthly')">💳 Pay ₹200 via UPI</button>
+    </div>
+    <div class="plan-card alt">
+      <div style="font-size:13px;color:var(--sub);font-family:'JetBrains Mono';font-weight:600">Yearly (1 month free)</div>
+      <div class="plan-price">₹2,200 <small>/ year</small></div>
+      <div class="plan-desc">Best value · Expires in 365 days</div>
+      <button class="pay-btn" style="background:var(--grad-warm);color:#fff" onclick="initiatePayment(2200,'yearly')">💳 Pay ₹2,200 via UPI</button>
+    </div>
+    <div class="plan-card uni">
+      <div style="font-size:13px;color:var(--sub);font-family:'JetBrains Mono';font-weight:600">University License</div>
+      <div class="plan-price">₹7,00,000 <small>/ year</small></div>
+      <div class="plan-desc">Unlimited students · Custom rollout · Email support</div>
+      <button class="pay-btn" onclick="upgradeToCollege()">Contact for License</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT PAGE -->
+<div id="pg-payment" class="scr">
+  <div class="payment-hdr">
+    <button class="hbtn" onclick="show('pg-premium')">← Back</button>
+    <div class="chat-logo" style="background:var(--grad-warm)">💳</div>
+    <div class="chat-info">
+      <div class="chat-brand">HealthPulse Pro</div>
+      <div class="chat-title">UPI Payment</div>
+    </div>
+  </div>
+  <div class="payment-body" id="paymentBody">
+    <div class="payment-card">
+      <div class="upi-logo">💳</div>
+      <h2>Pay with UPI</h2>
+      <p class="sub" id="paymentAmount">₹200 / month</p>
+      <div id="paymentOptions">
+        <div class="payment-option selected" onclick="selectUPI('gpay')">
+          <div class="icon">📱</div>
+          <div class="info"><div class="name">Google Pay</div><div class="desc">Pay using GPay</div></div>
+          <div class="radio"></div>
+        </div>
+        <div class="payment-option" onclick="selectUPI('phonepe')">
+          <div class="icon">📱</div>
+          <div class="info"><div class="name">PhonePe</div><div class="desc">Pay using PhonePe</div></div>
+          <div class="radio"></div>
+        </div>
+        <div class="payment-option" onclick="selectUPI('paytm')">
+          <div class="icon">📱</div>
+          <div class="info"><div class="name">Paytm</div><div class="desc">Pay using Paytm</div></div>
+          <div class="radio"></div>
+        </div>
+        <div class="payment-option" onclick="selectUPI('other')">
+          <div class="icon">🏦</div>
+          <div class="info"><div class="name">Other UPI</div><div class="desc">Any UPI app</div></div>
+          <div class="radio"></div>
+        </div>
+      </div>
+      <button class="pay-btn phonepe" style="width:100%;margin-top:16px;padding:16px" id="payNowBtn" onclick="processPayment()">💳 Pay Now</button>
+      <p style="font-size:11px;color:var(--muted);margin-top:12px">🔒 Secure UPI Payment · 0% Commission</p>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT PAGE -->
+<div id="pg-chat" class="scr">
+  <div class="chat-hdr">
+    <button class="hbtn" id="btn-bk">← <span id="txt-back2">Subjects</span></button>
+    <div class="chat-logo" id="chatLogo">HP</div>
+    <div class="chat-info"><div class="chat-brand">HealthPulse · Veda AI</div><div class="chat-title" id="ctitle"></div></div>
+    <button class="hbtn mcq" onclick="startMCQTest()" title="10 MCQ Test">📝 Test</button>
+    <button class="premium-badge" style="padding:7px 10px" onclick="showPremium()">👑</button>
+  </div>
+  <div id="ca"></div>
+  <div class="ibar">
+    <div class="iinner">
+      <div class="attach-bar" id="attachBar"></div>
+      <div class="irow">
+        <input type="file" id="pdfFile" accept="application/pdf" style="display:none">
+        <button class="iconbtn" onclick="document.getElementById('pdfFile').click()" title="Upload PDF">📎</button>
+        <button class="iconbtn" id="micBtn" onclick="toggleVoice()" title="Voice input">🎤</button>
+        <textarea id="ci" rows="1" placeholder="Ask · attach PDF · speak ✨"></textarea>
+        <button id="sb" disabled>➤</button>
+      </div>
+      <div class="usage-row"><span>📊 Today's usage</span><span id="usageCount">0</span></div>
+      <div class="free-limit-bar"><div class="free-limit-fill" id="usageFill"></div></div>
+      <div id="upgradeMsg"></div>
+      <div id="cooldownDisplay" style="text-align:center;font-size:11px;color:var(--muted);margin-top:4px;display:none"></div>
+      <div class="logout-link" onclick="logoutUser()">🚪 Logout</div>
+    </div>
+  </div>
+</div>
+
+<!-- MCQ TEST PAGE -->
+<div id="pg-mcq" class="scr">
+  <div class="mcq-hdr">
+    <button class="hbtn" onclick="exitMCQ()">← Exit</button>
+    <div class="chat-logo" id="mcqLogo">📝</div>
+    <div class="chat-info">
+      <div class="chat-brand">MCQ Test · Veda AI</div>
+      <div class="chat-title" id="mcqTitle"></div>
+    </div>
+  </div>
+  <div class="mcq-body" id="mcqBody"></div>
+</div>
+
+<script>
+// ============================================================
+// HealthPulse Pro · Veda AI — COMPLETE VERSION
+// 🔐 API key is on BACKEND (not in frontend!)
+// 💳 UPI Payment Integrated
+// 👑 Premium Auto-Expiry (30/365 days)
+// ============================================================
+
+// ============================================================
+// 🔐 BACKEND URL — Auto detect domain (Render pe kaam karega!)
+// ============================================================
+const BACKEND_URL = window.location.origin;
+
+console.log('🔗 Backend URL:', BACKEND_URL);
+
+// ============================================================
+// 💳 PAYMENT SYSTEM
+// ============================================================
+let selectedUPI = 'gpay';
+let paymentAmount = 200;
+let paymentPlan = 'monthly';
+
+function selectUPI(method) {
+  selectedUPI = method;
+  document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.payment-option').forEach(el => {
+    if (el.textContent.includes(method) || 
+        (method === 'gpay' && el.textContent.includes('Google')) ||
+        (method === 'phonepe' && el.textContent.includes('PhonePe')) ||
+        (method === 'paytm' && el.textContent.includes('Paytm')) ||
+        (method === 'other' && el.textContent.includes('Other'))) {
+      el.classList.add('selected');
+    }
+  });
+}
+
+function initiatePayment(amount, plan) {
+  const email = localStorage.getItem('userEmail');
+  if (!email) {
+    alert('Please login first!');
+    return;
+  }
+  
+  paymentAmount = amount;
+  paymentPlan = plan || 'monthly';
+  
+  document.getElementById('paymentAmount').textContent = `₹${amount} / ${plan || 'monthly'}`;
+  show('pg-payment');
+}
+
+async function processPayment() {
+  const email = localStorage.getItem('userEmail');
+  if (!email) {
+    alert('Please login first!');
+    return;
+  }
+  
+  const btn = document.getElementById('payNowBtn');
+  btn.textContent = '⏳ Processing...';
+  btn.disabled = true;
+  
+  try {
+    const response = await fetch(`${BACKEND_URL}/api/create-payment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: paymentAmount,
+        email: email,
+        plan: paymentPlan,
+        phone: '9999999999'
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      alert('✅ Payment initiated! Redirecting to UPI...');
+      window.location.href = data.paymentUrl;
+    } else {
+      alert('❌ Payment failed: ' + data.error);
+      btn.textContent = '💳 Pay Now';
+      btn.disabled = false;
+    }
+  } catch (error) {
+    alert('❌ Error: ' + error.message);
+    btn.textContent = '💳 Pay Now';
+    btn.disabled = false;
+  }
+}
+
+// Check payment success on page load
+(function checkPaymentStatus() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const paymentStatus = urlParams.get('payment');
+  const email = urlParams.get('email');
+  
+  if (paymentStatus === 'success') {
+    alert('🎉 Payment Successful! You are now a Premium member!');
+    if (email) {
+      localStorage.setItem('userEmail', email);
+      fetchPremiumList();
+    }
+    window.history.replaceState({}, document.title, window.location.pathname);
+  } else if (paymentStatus === 'failed') {
+    alert('❌ Payment failed. Please try again.');
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+})();
+
+// ============================================================
+// 🔐 SECURE: API Call via Backend Proxy
+// ============================================================
+async function callDeepSeek(systemText, history, opts) {
+  opts = opts || {};
+  
+  const messages = [];
+  for (const m of history) {
+    if (m.role === 'assistant') {
+      messages.push({ role: "assistant", content: m.content });
+    } else {
+      let content = m.content || '';
+      if (m.pdf) {
+        content = (content ? content + ' ' : '') + '[PDF attached: ' + (m.pdf.name || 'document') + ']';
+      }
+      messages.push({ role: "user", content: content });
+    }
+  }
+  
+  const response = await fetch(`${BACKEND_URL}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: messages,
+      systemPrompt: systemText,
+      temperature: opts.temperature || 0.3,
+      maxTokens: opts.maxOutputTokens || 1400
+    })
+  });
+  
+  const data = await response.json();
+  if (!data.success) {
+    throw new Error(data.error || 'API error');
+  }
+  return data.reply;
+}
+
+// ============================================================
+// 🔐 SECURE: MCQ Generation via Backend Proxy
+// ============================================================
+async function generateMCQ(prompt) {
+  const response = await fetch(`${BACKEND_URL}/api/mcq`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt })
+  });
+  const data = await response.json();
+  if (!data.success) {
+    throw new Error(data.error || 'MCQ generation failed');
+  }
+  return data.reply;
+}
+
+// ============================================================
+// 🔐 SECRET URL ADMIN SYSTEM
+// ============================================================
+const SECRET_KEY = 'MySuperSecret2025';
+
+function isAdmin() {
+  return localStorage.getItem('admin_mode') === 'true';
+}
+
+(function checkAdminMode() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const key = urlParams.get('admin');
+  if (key === SECRET_KEY) {
+    localStorage.setItem('admin_mode', 'true');
+    console.log('🔐 Admin mode activated.');
+  }
+  if (isAdmin()) {
+    const btn = document.getElementById('tbAdminBtn');
+    if (btn) btn.style.display = 'flex';
+  }
+})();
+
+// ============================================================
+// DATA LOGGING (for AI Training)
+// ============================================================
+function saveQA(question, answer) {
+  try {
+    let history = JSON.parse(localStorage.getItem('medical_qa_history')) || [];
+    const entry = {
+      timestamp: new Date().toISOString(),
+      sector: curSector || 'unknown',
+      subject: curSubject || 'unknown',
+      question: question,
+      answer: answer
+    };
+    history.push(entry);
+    localStorage.setItem('medical_qa_history', JSON.stringify(history));
+  } catch(e) { console.warn('Save QA error:', e); }
+}
+
+function downloadData() {
+  const data = localStorage.getItem('medical_qa_history');
+  if (!data || data === '[]') {
+    alert(lang === 'hi' ? 'अभी कोई डेटा नहीं है।' : 'No data yet.');
+    return;
+  }
+  if (!confirm(lang === 'hi' ? 'सारा डेटा JSON फाइल में डाउनलोड करें?' : 'Download all data as JSON?')) return;
+  try {
+    const blob = new Blob([data], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `HealthPulse_Data_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) {
+    alert(lang === 'hi' ? 'डाउनलोड में त्रुटि: ' + e.message : 'Download error: ' + e.message);
+  }
+}
+
+// ============================================================
+// ADMIN PANEL
+// ============================================================
+function showAdminPanel() {
+  if (!isAdmin()) {
+    alert('🔐 Admin mode active nahi hai.\nURL mein ?admin=' + SECRET_KEY + ' add karo.');
+    return;
+  }
+  const html = `<div id="hiddenAdminOverlay" class="admin-overlay"><div class="admin-box">
+    <h3>🔐 Admin Panel</h3>
+    <p>Logged in: <b style="color:var(--lime)">${currentUserEmail || 'N/A'}</b></p>
+    <hr style="border-color:var(--border);margin:10px 0 14px">
+    <h4 style="font-size:13px;color:var(--sub);margin-bottom:8px">👑 Premium User Add / Remove</h4>
+    <input type="email" id="adminEmailInput" placeholder="Student ka email daalo" class="admin-input">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+      <button class="admin-btn" onclick="adminAddEmail()">➕ Add Premium</button>
+      <button class="admin-btn danger" onclick="adminRemoveEmail()">➖ Remove Premium</button>
+    </div>
+    <h4 style="margin-top:16px;font-size:13px;color:var(--sub)">👑 Current Premium Users (${premiumEmails.length})</h4>
+    <ul id="adminPremiumList" class="premium-list"></ul>
+    <h4 style="margin-top:16px;font-size:13px;color:var(--sub)">📥 Data Export for AI Training</h4>
+    <button class="admin-btn download glow" onclick="downloadData()">📥 Download All Q&A Data (JSON)</button>
+    <hr style="border-color:var(--border);margin:14px 0">
+    <button class="admin-btn" style="background:var(--surface-2);color:var(--text);width:100%;padding:13px;font-size:14px" onclick="closeAdminPanel()">✕ Panel Band Karo</button>
+  </div></div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+  renderAdminList();
+}
+
+function closeAdminPanel() {
+  document.getElementById('hiddenAdminOverlay')?.remove();
+}
+
+function renderAdminList() {
+  const list = document.getElementById('adminPremiumList');
+  if (!list) return;
+  list.innerHTML = premiumEmails.length ? '' : '<li style="color:var(--muted)">No premium users yet.</li>';
+  premiumEmails.forEach(email => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span>${email}</span> <button class="admin-btn danger" onclick="adminManualRemove('${email}')">Remove</button>`;
+    list.appendChild(li);
+  });
+}
+
+function adminAddEmail() {
+  const e = document.getElementById('adminEmailInput')?.value.trim().toLowerCase();
+  if (!e || !e.includes('@')) return alert('Valid email enter karo (@ hona chahiye)');
+  if (premiumEmails.includes(e)) return alert('✅ Yeh email already premium list mein hai!');
+  premiumEmails.push(e);
+  localStorage.setItem('local_premium_emails', JSON.stringify(premiumEmails));
+  if (e === (currentUserEmail || '').toLowerCase()) {
+    isPremiumUser = true; DAILY_LIMIT = Infinity; updateUI();
+  }
+  renderAdminList();
+  const input = document.getElementById('adminEmailInput');
+  if (input) input.value = '';
+  alert('✅ ' + e + ' ko premium add kar diya! ');
+}
+
+function adminRemoveEmail() {
+  const e = document.getElementById('adminEmailInput')?.value.trim().toLowerCase();
+  if (!e) return alert('Pehle email input mein daalo');
+  if (!premiumEmails.includes(e)) return alert('⚠️ Yeh email premium list mein nahi hai.');
+  adminManualRemove(e);
+}
+
+function adminManualRemove(e) {
+  if (!confirm('Remove ' + e + ' from premium list?')) return;
+  premiumEmails = premiumEmails.filter(em => em !== e);
+  localStorage.setItem('local_premium_emails', JSON.stringify(premiumEmails));
+  if (e === (currentUserEmail || '').toLowerCase()) {
+    isPremiumUser = false; DAILY_LIMIT = 5; loadDailyCount(); updateUI();
+  }
+  renderAdminList();
+  const input = document.getElementById('adminEmailInput');
+  if (input) input.value = '';
+}
+
+// ============================================================
+// ORIGINAL APP CODE
+// ============================================================
+
+let premiumEmails = [];
+let isPremiumUser = false;
+let currentUserEmail = localStorage.getItem('userEmail');
+let dailyCount = 0;
+let DAILY_LIMIT = 5;
+const AD_REWARD = 5;
+let isBusy = false;
+let pendingPDF = null;
+let adWatchCount = 0;
+let cooldownEndTime = null;
+let countdownInterval = null;
+
+function checkAuth() {
+  if (!currentUserEmail) {
+    let email = prompt("🚀 Welcome to HealthPulse Pro ✨\n\nEnter your email to sign up / log in:\n(We collect data to improve our AI)", "");
+    if (email && email.includes('@')) {
+      currentUserEmail = email;
+      localStorage.setItem('userEmail', email);
+      fetchPremiumList().then(() => location.reload());
+    } else { 
+      if (email !== null) alert("A valid email is required."); 
+    }
+    return false;
+  }
+  return true;
+}
+
+function logoutUser() { 
+  localStorage.removeItem('userEmail'); 
+  localStorage.removeItem('hp_daily_count_' + currentUserEmail);
+  localStorage.removeItem('hp_count_date_' + currentUserEmail);
+  localStorage.removeItem('cooldown_end_' + currentUserEmail);
+  location.reload(); 
+}
+
+async function fetchPremiumList() {
+  const localList = JSON.parse(localStorage.getItem('local_premium_emails') || '[]');
+  try {
+    const PREMIUM_JSON_URL = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/premium-users.json";
+    const r = await fetch(PREMIUM_JSON_URL); 
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    const remoteList = d.premiumEmails || [];
+    premiumEmails = [...new Set([...remoteList, ...localList])];
+    if (currentUserEmail) isPremiumUser = premiumEmails.includes(currentUserEmail.toLowerCase());
+    DAILY_LIMIT = isPremiumUser ? Infinity : 5;
+    loadDailyCount();
+    checkCooldown();
+    updateUI();
+    updatePremiumBadge();
+    checkPremiumExpiry();
+  } catch(e) {
+    premiumEmails = localList;
+    isPremiumUser = premiumEmails.includes((currentUserEmail||'').toLowerCase());
+    DAILY_LIMIT = isPremiumUser ? Infinity : 5;
+    loadDailyCount();
+    checkCooldown();
+    updateUI();
+    updatePremiumBadge();
+    checkPremiumExpiry();
+  }
+}
+
+async function checkPremiumExpiry() {
+  const email = localStorage.getItem('userEmail');
+  if (!email) return;
+  
+  try {
+    const response = await fetch(`${BACKEND_URL}/api/premium-status?email=${encodeURIComponent(email)}`);
+    const data = await response.json();
+    
+    if (data.success && data.isPremium) {
+      const statusEl = document.getElementById('premiumStatus');
+      if (statusEl) {
+        statusEl.innerHTML = `👑 Premium active · ${data.daysLeft} days remaining · Expires on ${new Date(data.expiry).toLocaleDateString()}`;
+      }
+    } else if (data.success && !data.isPremium) {
+      const statusEl = document.getElementById('premiumStatus');
+      if (statusEl) {
+        statusEl.innerHTML = '⏰ Premium expired or not active. Upgrade now!';
+      }
+    }
+  } catch (error) {
+    console.error('Error checking premium expiry:', error);
+  }
+}
+
+function updatePremiumBadge() {
+  const badge = document.getElementById('premiumBadge');
+  if (isPremiumUser) {
+    badge.textContent = '👑 Premium';
+    badge.style.background = 'var(--grad-lime)';
+    badge.style.color = '#000';
+  } else {
+    badge.textContent = '👑 PRO';
+    badge.style.background = 'var(--grad-warm)';
+    badge.style.color = '#fff';
+  }
+}
+
+function loadDailyCount() {
+  if (isPremiumUser) return;
+  const saved = localStorage.getItem('hp_daily_count_' + currentUserEmail);
+  const date = localStorage.getItem('hp_count_date_' + currentUserEmail);
+  const today = new Date().toDateString();
+  if (date === today && saved !== null) {
+    dailyCount = parseInt(saved);
+  } else {
+    dailyCount = 0;
+    localStorage.setItem('hp_daily_count_' + currentUserEmail, '0');
+    localStorage.setItem('hp_count_date_' + currentUserEmail, today);
+    adWatchCount = 0;
+    localStorage.setItem('hp_ad_watch_count_' + currentUserEmail, '0');
+  }
+  const adSaved = localStorage.getItem('hp_ad_watch_count_' + currentUserEmail);
+  adWatchCount = adSaved ? parseInt(adSaved) : 0;
+}
+
+function saveDailyCount() { 
+  if (!isPremiumUser && currentUserEmail) {
+    localStorage.setItem('hp_daily_count_' + currentUserEmail, dailyCount);
+    localStorage.setItem('hp_ad_watch_count_' + currentUserEmail, adWatchCount);
+  }
+}
+
+function checkCooldown() {
+  if (isPremiumUser) return;
+  const saved = localStorage.getItem('cooldown_end_' + currentUserEmail);
+  if (saved) {
+    cooldownEndTime = new Date(parseInt(saved));
+    if (cooldownEndTime > new Date()) {
+      return;
+    } else {
+      cooldownEndTime = null;
+      localStorage.removeItem('cooldown_end_' + currentUserEmail);
+      dailyCount = 0;
+      saveDailyCount();
+      updateUI();
+    }
+  }
+}
+
+function incrementUsage() {
+  if (isPremiumUser) return true;
+  
+  if (cooldownEndTime && cooldownEndTime > new Date()) {
+    const remaining = Math.ceil((cooldownEndTime - new Date()) / (1000 * 60 * 60));
+    alert(lang === 'hi' ? `⏳ ${remaining} घंटे बाद फिर से पूछ सकते हैं।` : `⏳ Wait ${remaining} hours before asking again.`);
+    return false;
+  }
+  
+  if (dailyCount >= DAILY_LIMIT) {
+    if (adWatchCount === 0) {
+      showAdModal('single');
+    } else if (adWatchCount === 1) {
+      showAdModal('double');
+    } else {
+      startCooldown();
+      return false;
+    }
+    return false;
+  }
+  dailyCount++;
+  saveDailyCount();
+  updateUI();
+  return true;
+}
+
+function startCooldown() {
+  const cooldownHours = 12;
+  cooldownEndTime = new Date(Date.now() + cooldownHours * 60 * 60 * 1000);
+  localStorage.setItem('cooldown_end_' + currentUserEmail, cooldownEndTime.getTime().toString());
+  dailyCount = DAILY_LIMIT;
+  saveDailyCount();
+  updateUI();
+  alert(lang === 'hi' ? `⏳ ${cooldownHours} घंटे का cooldown शुरू हो गया है।` : `⏳ ${cooldownHours} hour cooldown started.`);
+}
+
+let adMode = 'single';
+let adCount = 0;
+
+function showAdModal(mode) {
+  adMode = mode || 'single';
+  adCount = 0;
+  const modal = document.getElementById('adModal');
+  modal.classList.add('active');
+  
+  const title = document.querySelector('#adModal .ad-title');
+  const btn = document.getElementById('watchAdBtn');
+  const countdown = document.getElementById('adCountdown');
+  
+  if (mode === 'double') {
+    title.innerHTML = 'Watch <span style="color:var(--lime)">2 ads</span> → unlock +5 questions';
+    btn.textContent = '▶ Watch Ad 1/2 (30s)';
+    adCount = 0;
+  } else {
+    title.innerHTML = 'Watch ad → unlock <span style="color:var(--lime)">+5 questions</span>';
+    btn.textContent = '▶ Watch Ad (30s)';
+    adCount = 0;
+  }
+  
+  let t = 30;
+  countdown.textContent = t;
+  btn.disabled = true;
+  if (countdownInterval) clearInterval(countdownInterval);
+  countdownInterval = setInterval(() => {
+    t--;
+    countdown.textContent = t;
+    if (t <= 0) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+      btn.disabled = false;
+    }
+  }, 1000);
+}
+
+function closeAdModal() {
+  document.getElementById('adModal').classList.remove('active');
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+  }
+}
+
+function watchAd() {
+  const btn = document.getElementById('watchAdBtn');
+  if (btn.disabled) return;
+  
+  if (adMode === 'double') {
+    adCount++;
+    if (adCount === 1) {
+      btn.textContent = '▶ Watch Ad 2/2 (30s)';
+      btn.disabled = true;
+      let t = 30;
+      const countdown = document.getElementById('adCountdown');
+      countdown.textContent = t;
+      if (countdownInterval) clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        t--;
+        countdown.textContent = t;
+        if (t <= 0) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+          btn.disabled = false;
+        }
+      }, 1000);
+    } else {
+      adWatchCount = 2;
+      DAILY_LIMIT = 10;
+      saveDailyCount();
+      closeAdModal();
+      alert('🎉 +5 questions added! You now have ' + (DAILY_LIMIT - dailyCount) + ' questions left.');
+    }
+  } else {
+    adWatchCount = 1;
+    DAILY_LIMIT = 10;
+    saveDailyCount();
+    closeAdModal();
+    alert('🎉 +5 questions added! You now have ' + (DAILY_LIMIT - dailyCount) + ' questions left.');
+  }
+  updateUI();
+}
+
+function updateUI() {
+  const uc = document.getElementById('usageCount');
+  const fill = document.getElementById('usageFill');
+  const msg = document.getElementById('upgradeMsg');
+  const cd = document.getElementById('cooldownDisplay');
+  
+  if (!uc) return;
+  
+  if (isPremiumUser) {
+    uc.innerHTML = '♾️ Unlimited';
+    fill.style.width = '100%';
+    msg.innerHTML = '👑 Premium active — unlimited & ad-free';
+    if (cd) cd.style.display = 'none';
+    return;
+  }
+  
+  if (cooldownEndTime && cooldownEndTime > new Date()) {
+    const remaining = Math.ceil((cooldownEndTime - new Date()) / (1000 * 60 * 60));
+    cd.style.display = 'block';
+    cd.innerHTML = `⏳ Cooldown: ${remaining}h remaining · Ask again after 12h`;
+    uc.innerHTML = '⏳ On cooldown';
+    fill.style.width = '100%';
+    fill.style.background = 'var(--red)';
+    msg.innerHTML = `⏳ ${remaining} hours remaining. Come back later!`;
+    return;
+  } else {
+    if (cd) cd.style.display = 'none';
+    fill.style.background = 'var(--grad-main)';
+  }
+  
+  const remaining = DAILY_LIMIT - dailyCount;
+  uc.innerHTML = dailyCount + ' / ' + DAILY_LIMIT;
+  fill.style.width = Math.min((dailyCount/DAILY_LIMIT)*100,100) + '%';
+  
+  if (dailyCount >= DAILY_LIMIT) {
+    if (adWatchCount === 0) {
+      msg.innerHTML = '⚠️ Daily cap hit. <button class="watch-ad-btn" onclick="showAdModal(\'single\')">📺 Watch ad → +5</button> or <a href="#" onclick="showPremium();return false">Go Pro →</a>';
+    } else if (adWatchCount === 1) {
+      msg.innerHTML = '⚠️ Daily cap hit again. <button class="watch-ad-btn" onclick="showAdModal(\'double\')">📺 Watch 2 ads → +5</button> or <a href="#" onclick="showPremium();return false">Go Pro →</a>';
+    } else {
+      msg.innerHTML = '⏳ All ads used today. <a href="#" onclick="showPremium();return false">Go Pro →</a>';
+      cd.style.display = 'block';
+      cd.innerHTML = '⏳ Cooldown: 12h · Ask again after 12 hours';
+    }
+  } else {
+    msg.innerHTML = '✨ <b>' + remaining + '</b> questions left today · <a href="#" onclick="showPremium();return false">Go Pro →</a>';
+  }
+}
+
+function upgradeToPremium(plan) {
+  if (plan === 'monthly') {
+    alert('📧 Student Monthly: ₹200/month\n\n✅ Unlimited questions\n✅ No ads\n✅ No cooldown\n⏰ Expires in 30 days\n\n💳 Pay via UPI');
+  } else {
+    alert('📧 Student Yearly: ₹2,200/year (1 month free!)\n\n✅ 13 months for price of 12\n✅ Unlimited questions\n✅ No ads\n✅ No cooldown\n⏰ Expires in 365 days\n\n💳 Pay via UPI');
+  }
+}
+
+function upgradeToCollege() {
+  alert('🏛️ University License: ₹7,00,000/year\n\n✅ Unlimited students\n✅ Custom rollout\n✅ Priority support\n\nEmail: colleges@healthpulse.com');
+}
+
+// -------- LOGO DOUBLE-CLICK TO OPEN ADMIN PANEL --------
+document.getElementById('logoAnim').addEventListener('dblclick', (e) => {
+  e.stopPropagation();
+  if (isAdmin()) {
+    showAdminPanel();
+  } else {
+    alert('🔐 Admin mode not activated.\n\nPlease open the app with:\n?admin=' + SECRET_KEY);
+  }
+});
+
+// -------- SECTORS --------
+var SECTORS = {
+  MBBS:{label:'MBBS / MD',icon:'🏥',color:'#c2ff3d',grad:'linear-gradient(135deg,#c2ff3d,#3df0ff)',desc:'Allopathy · Modern Medicine',
+    subjects:['Anatomy','Physiology','Biochemistry','Pathology','Microbiology','Pharmacology','Forensic Medicine','Community Medicine (PSM)','General Medicine','General Surgery','Obstetrics & Gynaecology','Paediatrics','Orthopaedics','Ophthalmology','ENT','Dermatology & Venereology','Psychiatry','Radiology','Anaesthesia']},
+  Ayurveda:{label:'BAMS / Ayurveda',icon:'🌿',color:'#84cc16',grad:'linear-gradient(135deg,#bef264,#15803d)',desc:'Ayurvedic Medicine · BAMS',
+    subjects:['Padartha Vigyan','Ashtanga Hridayam','Charaka Samhita','Sushruta Samhita','Kriya Sharir','Rachana Sharir','Dravyaguna','Rasa Shastra & Bhaishajya Kalpana','Agad Tantra','Swasthavritta','Kayachikitsa','Panchakarma','Shalya Tantra','Shalakya Tantra','Prasuti Tantra & Striroga','Kaumarbhritya','Manasroga','Prayogik Evam Vidhi Shastra']},
+  Homeopathy:{label:'BHMS / Homeopathy',icon:'💊',color:'#fbbf24',grad:'linear-gradient(135deg,#fbbf24,#b45309)',desc:'Homeopathic Medicine · BHMS',
+    subjects:['Organon of Medicine','Homeopathic Philosophy','Materia Medica','Repertory','Homeopathic Pharmacy','Anatomy','Physiology & Biochemistry','Pathology & Microbiology','Practice of Medicine','Obstetrics & Gynaecology','Paediatrics','Surgery & Allied Specialities','ENT & Ophthalmology','Forensic Medicine & Toxicology','Community Medicine','Case Taking & Miasms','Constitutional Prescribing','Research Methodology']},
+  Nursing:{label:'B.Sc Nursing',icon:'🩺',color:'#ff3df0',grad:'linear-gradient(135deg,#ff3df0,#9d6cff)',desc:'Nursing Science · GNM · B.Sc',
+    subjects:['Anatomy & Physiology','Nutrition & Biochemistry','Nursing Foundations','Psychology','Microbiology','Sociology','Medical-Surgical Nursing','Pharmacology','Pathology','Community Health Nursing','Child Health Nursing','Mental Health Nursing','Midwifery & Obstetric Nursing','Management of Nursing Services','Research & Statistics']},
+  Dental:{label:'BDS / Dental',icon:'🦷',color:'#3df0ff',grad:'linear-gradient(135deg,#3df0ff,#0369a1)',desc:'Dental Surgery · BDS · MDS',
+    subjects:['Oral Anatomy & Histology','General Anatomy','General Physiology & Biochemistry','Dental Materials','General Pathology & Microbiology','General & Dental Pharmacology','Oral Pathology & Oral Microbiology','Conservative Dentistry & Endodontics','Oral & Maxillofacial Surgery','Prosthodontics','Periodontology','Orthodontics','Paediatric Dentistry','Oral Medicine & Radiology','Public Health Dentistry']},
+  Pharmacy:{label:'B.Pharm / Pharmacy',icon:'⚗️',color:'#9d6cff',grad:'linear-gradient(135deg,#a78bfa,#7c3aed)',desc:'Pharmaceutical Sciences · B.Pharm',
+    subjects:['Pharmaceutics','Pharmaceutical Chemistry','Pharmacognosy','Pharmacology','Pharmaceutical Analysis','Medicinal Chemistry','Pharmacokinetics','Biopharmaceutics','Industrial Pharmacy','Hospital & Clinical Pharmacy','Drug Regulatory Affairs','Pharmaceutical Microbiology','Pharmacotherapeutics','Quality Assurance','Pharmaceutical Biotechnology']},
+  Physiotherapy:{label:'BPT / Physiotherapy',icon:'🦴',color:'#ff7a3d',grad:'linear-gradient(135deg,#ff7a3d,#c2410c)',desc:'Physiotherapy · BPT · MPT',
+    subjects:['Anatomy for Physiotherapy','Physiology','Biochemistry','Pathology','Biomechanics','Exercise Therapy','Electrotherapy','Musculoskeletal Physiotherapy','Neurological Physiotherapy','Cardiopulmonary Physiotherapy','Paediatric Physiotherapy','Sports Physiotherapy','Community Rehabilitation','Research Methodology']}
+};
+
+var SUGG = {
+  MBBS:{en:['Explain brachial plexus','Mechanism of beta blockers?','Type 1 vs Type 2 MI difference?','Explain RAAS pathway'],hi:['Brachial plexus explain karo','Beta blockers ka mechanism?','Type 1 aur Type 2 MI mein fark?','RAAS pathway explain karo']},
+  Ayurveda:{en:['Explain Tridosha theory','5 types of Panchakarma?','Properties of Ashwagandha?','Vata dosha imbalance symptoms?'],hi:['Tridosha theory explain karo','Panchakarma ke 5 types?','Ashwagandha ke gun?','Vata dosha imbalance ke symptoms?']},
+  Homeopathy:{en:['Changes in Organon 6th edition?','Sulphur constitutional type?','What is Miasm theory?','How to use Repertory?'],hi:['Organon 6th edition mein kya change hua?','Sulphur constitutional type?','Miasm theory kya hai?','Repertory kaise use karte hain?']},
+  Nursing:{en:['Explain cardiac cycle','5 steps of nursing process?','IV fluid types and uses?','What is Glasgow Coma Scale?'],hi:['Cardiac cycle explain karo','Nursing process ke 5 steps?','IV fluid types aur uses?','Glasgow Coma Scale kya hai?']},
+  Dental:{en:['Dental pulp anatomy?','Gingivitis vs Periodontitis?','Local anesthesia in dentistry?','Tooth development stages?'],hi:['Dental pulp ki anatomy?','Gingivitis aur Periodontitis mein fark?','Dentistry mein local anesthesia?','Teeth development ke stages?']},
+  Pharmacy:{en:['Pharmacokinetics vs Pharmacodynamics?','Zero vs first order kinetics?','Drug interaction examples?','What is bioavailability?'],hi:['Pharmacokinetics vs Pharmacodynamics?','Zero vs first order kinetics?','Drug interaction examples?','Bioavailability kya hoti hai?']},
+  Physiotherapy:{en:['Types of muscle fibers?','What is RICE protocol?','Stroke rehabilitation approach?','What is gait cycle?'],hi:['Muscle fiber ke types?','RICE protocol kya hai?','Stroke rehabilitation?','Gait cycle explain karo']}
+};
+
+var TXT = {
+  en:{hsub:'Pick your medical sector — full syllabus, instant answers, zero cap.',back1:'← Back',pick:'Choose a subject',back2:'Subjects'},
+  hi:{hsub:'Apna medical sector choose karo — पूरा syllabus, instant answers.',back1:'← वापस',pick:'Subject choose karo',back2:'Subjects'}
+};
+
+var lang='en', curSector=null, curSubject=null, chatHist=[];
+
+function setLang(l){
+  lang=l;
+  document.getElementById('lb-en').className='lb'+(l==='en'?' on':'');
+  document.getElementById('lb-hi').className='lb'+(l==='hi'?' on':'');
+  var t=TXT[l];
+  document.getElementById('txt-hsub').innerHTML=t.hsub.replace('medical sector','<b>medical sector</b>');
+  document.getElementById('txt-pick').textContent=t.pick;
+  document.getElementById('txt-back1').textContent=t.back1;
+  document.getElementById('txt-back2').textContent=t.back2;
+}
+
+function show(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+
+function showPremium(){ show('pg-premium'); }
+
+(function buildSectors(){
+  var g=document.getElementById('sgrid');
+  Object.keys(SECTORS).forEach(k=>{
+    var v=SECTORS[k];
+    var b=document.createElement('button');
+    b.className='scard';
+    b.style.setProperty('--c-acc', v.color);
+    b.innerHTML='<div class="sc-emoji">'+v.icon+'</div>'+
+      '<div class="sc-label" style="color:'+v.color+'">'+v.label+'</div>'+
+      '<div class="sc-desc">'+v.desc+'</div>'+
+      '<div class="sc-meta"><span>'+v.subjects.length+' subjects</span><span class="sc-arrow" style="background:'+v.grad+'">→</span></div>';
+    b.onclick=()=>openSubject(k);
+    g.appendChild(b);
+  });
+})();
+
+function openSubject(sk){
+  curSector=sk;
+  var s=SECTORS[sk];
+  document.getElementById('sbadge').innerHTML='<div class="sbadge-icon" style="background:'+s.grad+'">'+s.icon+'</div><div><div class="sb-title" style="color:'+s.color+'">'+s.label+'</div><div class="sb-sub">'+s.desc+'</div></div>';
+  var g=document.getElementById('jgrid'); g.innerHTML='';
+  s.subjects.forEach(sub=>{
+    var b=document.createElement('button');
+    b.className='jchip';
+    b.innerHTML='<span class="jchip-bullet" style="background:'+s.color+';color:'+s.color+'"></span>'+xe(sub);
+    b.onclick=()=>openChat(sub);
+    g.appendChild(b);
+  });
+  show('pg-subject');
+}
+
+function openChat(sub){
+  curSubject=sub; chatHist=[]; pendingPDF=null; renderAttachBar();
+  var s=SECTORS[curSector];
+  document.getElementById('ctitle').textContent=s.icon+' '+s.label+' — '+sub;
+  document.getElementById('ctitle').style.color=s.color;
+  document.getElementById('chatLogo').style.background=s.grad;
+  document.getElementById('sb').style.background=s.grad;
+  document.getElementById('ci').placeholder=sub+' — ask · attach PDF · speak ✨';
+  document.getElementById('btn-bk').onclick=()=>openSubject(curSector);
+  renderWelcome();
+  show('pg-chat');
+}
+
+function renderWelcome(){
+  var ca=document.getElementById('ca');
+  var s=SECTORS[curSector];
+  var suggs=(SUGG[curSector]||{})[lang]||[];
+  var btns=suggs.map(q=>'<button class="sqb" style="border-color:'+s.color+'40;color:var(--text)" data-q="'+xe(q)+'">'+xe(q)+'</button>').join('');
+  ca.innerHTML='<div class="wlc"><div class="wlc-emoji">'+s.icon+'</div><div class="wlc-title" style="color:'+s.color+'">'+xe(curSubject)+'</div><div class="wlc-tag">✨ Veda AI · 100% accurate ✨</div>'+
+    '<div class="wlc-actions">'+
+      '<button class="wlc-act" onclick="startMCQTest()">📝 10-MCQ Test</button>'+
+      '<button class="wlc-act pdf" onclick="document.getElementById(\'pdfFile\').click()">📄 Upload PDF</button>'+
+      '<button class="wlc-act alt" onclick="toggleVoice()">🎤 Voice Q</button>'+
+      '<button class="wlc-act pay" onclick="showPremium()">💳 Upgrade</button>'+
+    '</div>'+
+    '<div class="slist">'+btns+'</div></div>';
+  ca.querySelectorAll('.sqb').forEach(b=>b.onclick=()=>sendMsg(b.getAttribute('data-q')));
+}
+
+function getSystemMessage(){
+  var s=SECTORS[curSector];
+  var li=lang==='hi'?'Hamesha pure Hindi mein jawab do. Medical terms English mein reh sakte hain.':'Always respond in clear English suitable for medical students.';
+  return 'You are Veda, an expert AI medical tutor on HealthPulse Pro.\nSector: '+s.label+' | Subject: '+curSubject+'\n\n'+li+'\n\nFormat every answer like this:\n**Key Point** — direct answer in 1-2 lines\n**Explanation** — detailed, exam-focused\n**High-Yield Exam Fact** — what examiners frequently ask\n**Mnemonic** — include only if genuinely helpful\n\nFor MCQs: explain why each option is right or wrong.\nUse **bold** to highlight key terms.\nBe 100% accurate, concise, and encouraging.\nIf a PDF is attached, base your answer on the PDF contents (summarize / explain / quiz the user as asked).\nYou are Veda — never mention any AI company.';
+}
+
+// ============================================================
+// SEND MESSAGE - Using Secure Backend
+// ============================================================
+async function sendMsg(txt){
+  var ci=document.getElementById('ci');
+  var msg=(txt!==undefined?txt:ci.value).trim();
+  if((!msg && !pendingPDF) || isBusy) return;
+  if(!incrementUsage()) return;
+  ci.value=''; updBtn();
+  var ca=document.getElementById('ca');
+  var wlc=ca.querySelector('.wlc'); if(wlc) wlc.remove();
+  const userMsg = { role:'user', content: msg || (lang==='hi'?'Is PDF par focus karo':'Use the attached PDF') };
+  if (pendingPDF) {
+    userMsg.pdf = { mime: pendingPDF.mime, data: pendingPDF.data, name: pendingPDF.name };
+  }
+  chatHist.push(userMsg);
+  addBubble('user', msg, pendingPDF ? pendingPDF.name : null);
+  const sentPDF = pendingPDF; pendingPDF=null; renderAttachBar();
+  isBusy=true;
+  var lid=addLoader();
+  try{
+    var reply = await callDeepSeek(getSystemMessage(), chatHist);
+    rmNode(lid);
+    addBubble('ai',reply);
+    chatHist.push({role:'assistant',content:reply});
+    saveQA(msg || '(PDF attached)', reply);
+  }catch(e){
+    console.error(e);
+    rmNode(lid);
+    var em=lang==='hi'?'⚠️ त्रुटि: '+e.message+'\n\nकृपया पुनः प्रयास करें।':'⚠️ Error: '+e.message+'\n\nPlease try again.';
+    addBubble('err',em);
+    if(chatHist.length>0 && chatHist[chatHist.length-1].role==='user') chatHist.pop();
+    if(!isPremiumUser){dailyCount--;saveDailyCount();updateUI();}
+  }
+  isBusy=false; updBtn();
+}
+
+function addBubble(type,text,fileName){
+  var ca=document.getElementById('ca');
+  var s=SECTORS[curSector];
+  var d=document.createElement('div');
+  if(type==='user'){
+    d.className='mrow u';
+    const chip = fileName ? `<div class="file-chip">📄 ${xe(fileName)}</div>` : '';
+    d.innerHTML='<div><div style="text-align:right">'+chip+'</div><div class="ubub" style="background:'+s.grad+'">'+xe(text||'(PDF attached)')+'</div></div>';
+  }else if(type==='err'){
+    d.className='mrow';
+    d.innerHTML='<div class="avc" style="background:'+s.grad+'">V</div><div class="abub"><div style="color:#ff7a8a">'+xe(text)+'</div></div>';
+  }else{
+    d.className='mrow';
+    d.innerHTML='<div class="avc" style="background:'+s.grad+'">V</div><div class="abub">'+fmtAI(text,s.color)+'</div>';
+  }
+  ca.appendChild(d);
+  ca.scrollTop=ca.scrollHeight;
+}
+
+function addLoader(){
+  var ca=document.getElementById('ca');
+  var s=SECTORS[curSector];
+  var id='ld'+Date.now();
+  var d=document.createElement('div');
+  d.className='mrow'; d.id=id;
+  d.innerHTML='<div class="avc" style="background:'+s.grad+'">V</div><div class="abub"><div class="dots"><span class="dot" style="background:'+s.color+';animation-delay:0s"></span><span class="dot" style="background:'+s.color+';animation-delay:.15s"></span><span class="dot" style="background:'+s.color+';animation-delay:.3s"></span></div></div>';
+  ca.appendChild(d);
+  ca.scrollTop=ca.scrollHeight;
+  return id;
+}
+
+function rmNode(id){var e=document.getElementById(id); if(e) e.remove();}
+
+function fmtAI(t,c){
+  return t.split('\n').map(l=>{
+    if(/^\*\*[^*]+\*\*/.test(l)) return '<div class="h3" style="color:'+c+'">'+inl(l,c)+'</div>';
+    if(/^[-•] /.test(l)) return '<div class="li">'+inl(l.slice(2),c)+'</div>';
+    if(/^\d+\.\s/.test(l)) return '<div class="li">'+inl(l,c)+'</div>';
+    if(l.trim()==='') return '<div style="height:6px"></div>';
+    return '<div class="pp">'+inl(l,c)+'</div>';
+  }).join('');
+}
+
+function inl(t,c){ return xe(t).replace(/\*\*(.*?)\*\*/g,'<strong style="color:'+c+'">$1</strong>'); }
+
+function xe(s){ return String(s).replace(/[&<>]/g,function(m){ return m==='&'?'&amp;':m==='<'?'&lt;':'>'; }); }
+
+function updBtn(){ document.getElementById('sb').disabled=(!document.getElementById('ci').value.trim() && !pendingPDF) || isBusy; }
+
+// ============================================================
+// PDF Upload
+// ============================================================
+document.getElementById('pdfFile').addEventListener('change', async (e)=>{
+  const file = e.target.files[0]; if (!file) return;
+  if (file.type !== 'application/pdf') { alert('Please pick a PDF file.'); return; }
+  if (file.size > 15*1024*1024) { alert('PDF too large (max 15 MB).'); return; }
+  const b64 = await fileToBase64(file);
+  pendingPDF = { name: file.name, mime:'application/pdf', data: b64 };
+  renderAttachBar();
+  const ci=document.getElementById('ci');
+  if (!ci.value.trim()) { ci.value = lang==='hi' ? 'Is PDF ko summarize karo aur key exam points nikalo.' : 'Summarize this PDF and pull out the key exam points.'; updBtn(); }
+  e.target.value='';
+});
+
+function fileToBase64(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]); r.onerror=rej; r.readAsDataURL(file); }); }
+
+function renderAttachBar(){
+  const bar = document.getElementById('attachBar'); if (!bar) return;
+  bar.innerHTML = pendingPDF ? `<span class="attach-pill">📄 ${xe(pendingPDF.name)} <span class="x" onclick="clearPDF()">×</span></span>` : '';
+}
+
+function clearPDF(){ pendingPDF=null; renderAttachBar(); }
+
+// ============================================================
+// Voice Input
+// ============================================================
+let recognition=null, isRecording=false;
+
+function toggleVoice(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert('Voice input not supported in this browser. Try Chrome.'); return; }
+  if (isRecording) { recognition && recognition.stop(); return; }
+  recognition = new SR();
+  recognition.lang = lang === 'hi' ? 'hi-IN' : 'en-US';
+  recognition.interimResults = true;
+  recognition.continuous = false;
+  const ci = document.getElementById('ci');
+  const startText = ci.value;
+  recognition.onstart = ()=>{ isRecording=true; document.getElementById('micBtn').classList.add('rec'); };
+  recognition.onend = ()=>{ isRecording=false; document.getElementById('micBtn').classList.remove('rec'); };
+  recognition.onerror = (ev)=>{ isRecording=false; document.getElementById('micBtn').classList.remove('rec'); console.warn('voice',ev); };
+  recognition.onresult = (ev)=>{
+    let txt='';
+    for (let i=0;i<ev.results.length;i++) txt += ev.results[i][0].transcript;
+    ci.value = (startText ? startText+' ' : '') + txt;
+    updBtn();
+  };
+  recognition.start();
+}
+
+// ============================================================
+// MCQ TEST - Using Secure Backend
+// ============================================================
+let mcqState = null;
+
+async function startMCQTest(){
+  if (!curSector || !curSubject) { alert(lang==='hi'?'Pehle ek subject choose karein.':'Please pick a subject first.'); return; }
+  if (!incrementUsage()) return;
+  const s=SECTORS[curSector];
+  document.getElementById('mcqTitle').textContent = s.icon+' '+s.label+' — '+curSubject;
+  document.getElementById('mcqLogo').style.background = s.grad;
+  document.getElementById('mcqBody').innerHTML = `<div class="mcq-card" style="text-align:center"><div style="font-size:36px;margin-bottom:8px">📝</div><div style="font-weight:800;font-size:18px;margin-bottom:6px">${lang==='hi'?'10 MCQ generate ho rahe hain…':'Generating 10 MCQs…'}</div><div style="color:var(--sub);font-size:13px">${xe(curSubject)} · ${lang==='hi'?'thoda intezaar':'a moment'}</div><div class="dots" style="justify-content:center;margin-top:14px"><span class="dot" style="background:${s.color}"></span><span class="dot" style="background:${s.color};animation-delay:.15s"></span><span class="dot" style="background:${s.color};animation-delay:.3s"></span></div></div>`;
+  show('pg-mcq');
+  try {
+    const langInstr = lang==='hi' ? 'Questions Hinglish (Hindi+English medical terms) mein likhein.' : 'Questions in clear English.';
+    const prompt = `Generate exactly 10 high-quality MCQs for ${s.label} → ${curSubject}.
+${langInstr}
+Each MCQ must be syllabus-relevant, exam-style, with 4 options (A,B,C,D), exactly one correct.
+Mix difficulty: 4 easy, 4 medium, 2 hard.
+Cover different topics within the subject — do NOT repeat the same concept.
+Return ONLY valid JSON, no markdown, this exact shape:
+{"questions":[{"q":"question text","options":["A text","B text","C text","D text"],"correct":0,"explanation":"why the correct option is right (1-2 lines)"}]}
+"correct" is the 0-based index. Provide exactly 10 items.`;
+    
+    const raw = await generateMCQ(prompt);
+    let parsed;
+    try { parsed = JSON.parse(raw); }
+    catch(e){ const m = raw.match(/\{[\s\S]*\}/); parsed = m ? JSON.parse(m[0]) : null; }
+    if (!parsed || !Array.isArray(parsed.questions) || parsed.questions.length < 1) throw new Error('Could not parse MCQs');
+    mcqState = { questions: parsed.questions.slice(0,10), idx: 0, score: 0, answers: [] };
+    renderMCQ();
+  } catch(e){
+    document.getElementById('mcqBody').innerHTML = `<div class="mcq-card"><div style="color:#ff7a8a;font-weight:700">⚠️ ${xe(e.message)}</div><button class="mcq-next show" onclick="startMCQTest()">↻ Retry</button></div>`;
+    if(!isPremiumUser){dailyCount--;saveDailyCount();updateUI();}
+  }
+}
+
+function renderMCQ(){
+  const body = document.getElementById('mcqBody');
+  const total = mcqState.questions.length;
+  if (mcqState.idx >= total) { renderMCQResult(); return; }
+  const q = mcqState.questions[mcqState.idx];
+  const pct = (mcqState.idx / total) * 100;
+  const letters = ['A','B','C','D','E'];
+  const opts = (q.options||[]).map((o,i)=>`<button class="mcq-opt" data-i="${i}"><span class="letter">${letters[i]}</span><span>${xe(o)}</span></button>`).join('');
+  body.innerHTML = `
+    <div class="mcq-progress">
+      <div class="mcq-prog-bar"><div class="mcq-prog-fill" style="width:${pct}%"></div></div>
+      <div class="mcq-prog-txt">${mcqState.idx+1} / ${total}</div>
+    </div>
+    <div class="mcq-card">
+      <div class="mcq-qnum">${lang==='hi'?'Sawaal':'Question'} ${mcqState.idx+1}</div>
+      <div class="mcq-q">${xe(q.q)}</div>
+      <div class="mcq-opts" id="mcqOpts">${opts}</div>
+      <div class="mcq-expl" id="mcqExpl"></div>
+      <button class="mcq-next" id="mcqNext" onclick="nextMCQ()">${lang==='hi'?'Agla sawaal →':'Next question →'}</button>
+    </div>`;
+  body.querySelectorAll('.mcq-opt').forEach(b=>b.onclick = ()=>pickMCQ(parseInt(b.dataset.i)));
+}
+
+function pickMCQ(i){
+  const q = mcqState.questions[mcqState.idx];
+  const correct = Number(q.correct);
+  const btns = document.querySelectorAll('#mcqOpts .mcq-opt');
+  btns.forEach((b,bi)=>{
+    b.disabled = true;
+    if (bi === correct) b.classList.add('correct');
+    else if (bi === i) b.classList.add('wrong');
+  });
+  const isRight = i === correct;
+  if (isRight) mcqState.score++;
+  mcqState.answers.push({ q:q.q, picked:i, correct, right:isRight });
+  const ex = document.getElementById('mcqExpl');
+  ex.innerHTML = `<b>${isRight ? (lang==='hi'?'✅ Sahi!':'✅ Correct!') : (lang==='hi'?'❌ Galat.':'❌ Wrong.')}</b> ${xe(q.explanation||'')}`;
+  ex.classList.add('show');
+  document.getElementById('mcqNext').classList.add('show');
+  if (mcqState.idx === mcqState.questions.length - 1) {
+    document.getElementById('mcqNext').textContent = lang==='hi' ? 'Result dekhein 🎯' : 'See result 🎯';
+  }
+}
+
+function nextMCQ(){ mcqState.idx++; renderMCQ(); }
+
+function renderMCQResult(){
+  const body = document.getElementById('mcqBody');
+  const total = mcqState.questions.length;
+  const score = mcqState.score;
+  const pct = Math.round((score/total)*100);
+  let grade, tag;
+  if (pct >= 90) { grade='🔥 Outstanding!'; tag=lang==='hi'?'Tu toh topper hai!':"You're a topper!"; }
+  else if (pct >= 70) { grade='💪 Great work!'; tag=lang==='hi'?'Bahut badhiya, thoda aur push.':'Solid — keep pushing.'; }
+  else if (pct >= 50) { grade='📈 Keep going'; tag=lang==='hi'?'Revision karke wapas aao.':'Revise and retake.'; }
+  else { grade='📚 Needs revision'; tag=lang==='hi'?'Concepts dohraen, phir test do.':'Brush up concepts and retry.'; }
+  body.innerHTML = `<div class="mcq-result">
+    <div class="mcq-score">${score}<small>/${total}</small></div>
+    <div class="mcq-grade">${grade}</div>
+    <div class="mcq-tag">${xe(tag)} · ${pct}%</div>
+    <div class="mcq-acts">
+      <button class="primary" onclick="startMCQTest()">↻ ${lang==='hi'?'Naya test':'New test'}</button>
+      <button class="secondary" onclick="exitMCQ()">${lang==='hi'?'Chat par wapas':'Back to chat'}</button>
+    </div>
+  </div>`;
+}
+
+function exitMCQ(){ mcqState=null; show('pg-chat'); }
+
+// ============================================================
+// INIT
+// ============================================================
+if (!checkAuth()) { /* wait */ } else { fetchPremiumList(); }
+
+document.getElementById('ci').addEventListener('input',updBtn);
+document.getElementById('ci').addEventListener('keydown',function(e){
+  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMsg(); }
+});
+document.getElementById('sb').onclick=function(){ sendMsg(); };
+
+// EXPOSE GLOBALS
+window.upgradeToPremium = upgradeToPremium;
+window.upgradeToCollege = upgradeToCollege;
+window.showPremium = showPremium;
+window.setLang = setLang;
+window.show = show;
+window.logoutUser = logoutUser;
+window.adminAddEmail = adminAddEmail;
+window.adminRemoveEmail = adminRemoveEmail;
+window.adminManualRemove = adminManualRemove;
+window.closeAdminPanel = closeAdminPanel;
+window.watchAd = watchAd;
+window.closeAdModal = closeAdModal;
+window.showAdModal = showAdModal;
+window.startMCQTest = startMCQTest;
+window.nextMCQ = nextMCQ;
+window.exitMCQ = exitMCQ;
+window.toggleVoice = toggleVoice;
+window.clearPDF = clearPDF;
+window.downloadData = downloadData;
+window.isAdmin = isAdmin;
+window.showAdminPanel = showAdminPanel;
+window.initiatePayment = initiatePayment;
+window.processPayment = processPayment;
+window.selectUPI = selectUPI;
+window.checkPremiumExpiry = checkPremiumExpiry;
+
+console.log('🚀 HealthPulse Pro loaded (SECURE - no API key in frontend!)');
+console.log('🔐 Admin mode: ' + (isAdmin() ? 'ACTIVE' : 'inactive'));
+console.log('📌 To activate admin: add ?admin=' + SECRET_KEY + ' to the URL');
+console.log('💳 UPI Payment: Integrated');
+console.log('👑 Premium: Auto-activation with expiry (30/365 days)');
+console.log('⏰ Auto-expiry: Active');
+</script>
+</body>
+</html>
